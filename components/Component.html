@@ -1,0 +1,71 @@
+<section class="section">
+    <div class="container">
+        <div class="notification is-info">
+            <h1 class="title">LT登壇してくれる神様たちを無礼にもシャッフルするやーつ</h1>
+        </div>
+    </div>
+    <div class="container">
+        {{#if orderList.length > 0}}
+        <p class="title">やっていき順！！</p>
+        <table class="table is-fullwidth is-primary is-striped">
+            <thead>
+                <tr>
+                    <th>発表順</th>
+                    <th>発表者</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orderList as order, index}}
+                <tr>
+                    <td>{{index+1}}</td>
+                    <td>{{order}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+    </div>
+    <div class="container field">
+        <div class="control">
+            <p class="title">登壇者入力</p>
+            <textarea bind:value="speakersListStr" class="textarea is-info" name="speakers" id="speakersList" cols="30" rows="10" placeholder="登壇者を改行区切りで入れてね">
+            </textarea>
+        </div>
+    </div>
+    <div class="container has-text-right">
+        <a on:click="shuffle()" class="button is-primary is-large">登壇順ガチャ！！</a>
+    </div>
+</section>
+
+<style>
+
+</style>
+
+<script>
+    export default {
+        methods: {
+            shuffle() {
+                this.speakersListStr = this.get('speakersListStr')
+                this.speakersList = this.speakersListStr.split('\n').filter(function(a){return a != ''})
+                this.orderList = this.speakersList
+                for(var i = this.orderList.length - 1; i > 0; i--){
+                    var r = Math.floor(Math.random() * (i + 1));
+                    var tmp = this.orderList[i];
+                    this.orderList[i] = this.orderList[r];
+                    this.orderList[r] = tmp;
+                }
+                this.orderListStr = this.orderList.join('\n')
+                this.set({orderListStr: this.orderListStr})
+                this.set({orderList: this.orderList})
+            }
+        },
+        data() {
+            return {
+                speakersListStr: '',
+                speakersList: [],
+                orderList: [],
+                orderListStr: ''
+            }
+        }
+    }
+</script>
